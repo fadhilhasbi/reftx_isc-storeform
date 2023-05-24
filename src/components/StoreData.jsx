@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import moment from 'moment';
+import axios from 'axios';
 
 const StoreData = () => {
   const [form] = Form.useForm();
@@ -11,7 +12,20 @@ const StoreData = () => {
     values.createdAt = new Date().toLocaleString();
     values.birthdate = moment(values.birthdate).format('dddd, DD/MM/YYYY');
     console.log(values);
-    message.success('Data stored successfully');
+
+    axios
+      .post(import.meta.env.VITE_API_URL, values)
+      .then((response) => {
+        console.log(response.data);
+        message.success('Data stored successfully');
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error('Failed to store data');
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   const maxWeight = 1000;
@@ -33,6 +47,7 @@ const StoreData = () => {
     }
     return Promise.resolve();
   };
+
   return (
     <Form form={form} onFinish={handleSubmit}>
       <Form.Item
