@@ -28,18 +28,11 @@ const StoreData = () => {
   }, [isSubmitting]);
 
   const validateName = (_, value) => {
-    return new Promise((resolve, reject) => {
-      // Simulating asynchronous check
-      setTimeout(() => {
-        if (value === 'John Doe') {
-          reject(new Error('Name already exists'));
-        } else {
-          resolve(); // Validation succeeded
-        }
-      }, 1000);
-    });
+    if (/[^a-zA-Z]/.test(value)) {
+      return Promise.reject(new Error('Name should only contain alphabetical characters'));
+    }
+    return Promise.resolve();
   };
-
   return (
     <Form form={form} onFinish={handleSubmit}>
       <Form.Item
